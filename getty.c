@@ -2,33 +2,57 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
 int main(){
-  char line[256];
-  char username[256]; //establish size of buffer
-  char password[256];
+  char linea[30];
+  char usuario[30];
+  char contra[30];
+	char usuarioEnTexto[30];
+	char contraEnTexto[30];
+  int flag = 1;
+  int status;
+  int pid;
+  FILE* archivo;
 
-  printf("Username:");
-  printf("\n");
+while(flag) {
+  printf("Usuario: ");
+  scanf("%s",usuario);
 
-  printf("Password:");
-  printf("\n");
+  printf("Contraseña: ");
+  scanf("%s",contra);
 
-  if(fgets(line, sizeof(line), stdin)){
-    if(sscanf(line,"%s", username)==1){
-      //recieved user
+  archivo = fopen("passwd.txt","rw+");
+
+  while (!feof(archivo))
+  {
+    if (fscanf(archivo,"%s : %s",usuarioEnTexto, contraEnTexto)) //fscanf(archivo,regex,variables)
+    {
+      if(strcmp(usuarioEnTexto, usuario) == 0)
+      {               //0 si str1==str2
+        if(strcmp(contraEnTexto, contra) == 0)
+        {
+          printf("\nLogin exitoso!\n\n");
+          flag = 0;
+        }
+        else{
+        }
+      }
     }
   }
-
-  if(fgets(line, sizeof(line), stdin)){
-    if(sscanf(line,"%s", password)==1){
-      //recieved pass
-    }
+  fclose(archivo);
+  if(!flag){
+    break;
   }
+  printf("\nLogin no valido. Vuelva a intentar.\n\n");
+}
 
+pid = fork();
 
-
+if(pid == 0) {
+  execlp("./sh","./sh", NULL);
+}
+else {
+  wait(&status);
   }
-
-//shmat
-//shmget
+}
