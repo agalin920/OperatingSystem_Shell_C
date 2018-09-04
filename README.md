@@ -1,4 +1,4 @@
-# OperatingSystem_Shell_C
+# operating-system-shell
 
 __Init__: Runs 6 xterm windows for getty
 
